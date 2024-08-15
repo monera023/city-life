@@ -5,7 +5,7 @@
   <title>{% block title %}{% endblock %}</title>
   <style>
     .bg-image-div {
-      background-image: url('/bg-image.jpeg');
+      /*background-image: url('/bg-image.jpeg');*/
       background-size: cover;
       background-position: center;
       min-height: 300px; /* Adjust as needed */
@@ -20,14 +20,6 @@
   <div class="text-xl text-slate-700 font-bold flex justify-center items-center"> 🏙 City Life </div>
 </header>
 
-<div class="bg-image-div relative text-center py-24 lg:py-24">
-  <div class="absolute inset-0 bg-black opacity-50"></div>
-  <div class="relative z-10">
-    <h1 class="text-2xl sm:text-4xl lg:text-4xl font-bold text-white text-shadow">
-      List of Recommendations in Bali
-    </h1>
-  </div>
-</div>
 
 <main>
   {% block content %}{% endblock %}

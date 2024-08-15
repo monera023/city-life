@@ -1,6 +1,6 @@
 from typing import List
 
-from server.constants import Category, CategoryPlaces, Place
+from server.constants import Category, CategoryPlaces, Place, AppConstants
 
 
 def get_formatted_category(items):
@@ -24,3 +24,8 @@ def get_formatted_place_category(items):
     return resp
 
 
+def validate_city(city_name: str) -> bool:
+    if city_name.isalpha() and city_name.lower() in AppConstants.ALLOWED_CITIES:
+        return True
+    else:
+        return False

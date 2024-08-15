@@ -8,6 +8,9 @@ class DbConstants:
     PLACES_TABLE = "places"
     DB_NAME = "city-life-places.db"
 
+class AppConstants:
+    DEFAULT_CITY = "bali"
+    ALLOWED_CITIES = ["bali", "tokyo"]
 
 class Category(BaseModel):
     id: Optional[int] = -1
@@ -20,6 +23,7 @@ class Place(BaseModel):
     name: str
     category: Union[int, str]
     url: str
+    city: Optional[str] = "None"
 
 class CategoryPlaces(BaseModel):
     category_name: str

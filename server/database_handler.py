@@ -45,6 +45,7 @@ class DataBaseHandler:
              CREATE TABLE IF NOT EXISTS places (
               id INTEGER PRIMARY KEY AUTOINCREMENT,
               name TEXT,
+              city TEXT,
               category INTEGER,
               url TEXT
              )
@@ -74,7 +75,7 @@ class DataBaseHandler:
         print(f"In insert_places")
         try:
             cursor = self.db.cursor()
-            insert_places_query = f"INSERT INTO {DbConstants.PLACES_TABLE} (name, category, url) VALUES (?, ?, ?)"
+            insert_places_query = f"INSERT INTO {DbConstants.PLACES_TABLE} (name, city, category, url) VALUES (?, ?, ?, ?)"
             cursor.executemany(insert_places_query, items)
             self.db.commit()
             cursor.close()
@@ -82,12 +83,14 @@ class DataBaseHandler:
             print(f"Got exception while inserting in places tables = {e}")
             raise e
 
-    def fetch_places_grouped_by_category(self):
+    def fetch_places_grouped_by_category(self, city: str = None):
         print(f"IN fetch_places_grouped_by_category")
         try:
             cursor = self.db.cursor()
             select_query = (f"select c.category_name, c.category_emoji, p.name, p.url from category as c right join"
                             f" places as p on c.id = p.category")
+            if city is not None:
+                select_query += f" where p.city = '{city}'"
             cursor.execute(select_query)
             rows = cursor.fetchall()
             cursor.close()
@@ -109,3 +112,32 @@ class DataBaseHandler:
         except Exception as e:
             print(f"Got exception in _ops_fetch_all_category = {e}")
             raise e
+
+    def flush_table(self, table_name):
+        cursor = self.db.cursor()
+        flush_table_query = f"DELETE FROM {table_name}"
+        cursor.execute(flush_table_query)
+
+        reset_autoincre_query = f"DELETE FROM sqlite_sequence WHERE name = '{table_name}'"
+        cursor.execute(reset_autoincre_query)
+
+        self.db.commit()
+        cursor.close()
+        print("Done flush for table..")
+
+    def drop_table(self, table_name):
+        cursor = self.db.cursor()
+        drop_table_query = f"DROP TABLE IF EXISTS {table_name};"
+        cursor.execute(drop_table_query)
+        self.db.commit()
+        cursor.close()
+        print(f"Dropped table..{table_name} from db")
+
+    def get_data(self, table_name):
+        cursor = self.db.cursor()
+
+        select_all_query = f"SELECT * FROM {table_name}"
+        cursor.execute(select_all_query)
+        rows = cursor.fetchall()
+        cursor.close()
+        return rows
